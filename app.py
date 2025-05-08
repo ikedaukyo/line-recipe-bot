@@ -22,17 +22,23 @@ def home():
 def callback():
     signature = request.headers.get("X-Line-Signature")
     body = request.get_data(as_text=True)
-    print("Received POST request to /callback")
+
+    print("===== Received POST request to /callback =====")
+    print(f"Signature: {signature}")
+    print(f"Body: {body}")
+
     try:
         handler.handle(body, signature)
         print("Webhook handled successfully")
     except Exception as e:
         print(f"Error in callback: {e}")
         abort(500)
+
     return "OK", 200
 
 @handler.add(TextMessage)
 def handle_message(event):
+    print("===== handle_message triggered =====")
     user_input = event.message.text
     print(f"User input: {user_input}")
 
@@ -44,6 +50,7 @@ def handle_message(event):
             max_tokens=150,
             temperature=0.7
         )
+
         reply_text = response.choices[0].text.strip()
         print(f"OpenAI Response: {reply_text}")
 
@@ -57,10 +64,7 @@ def handle_message(event):
     )
 
     try:
+        print("Sending reply to LINE...")
         line_bot_api.reply_message(reply_message)
         print("Reply sent successfully!")
-    except Exception as e:
-        print(f"LINE Reply Error: {e}")
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    except Exception as e
