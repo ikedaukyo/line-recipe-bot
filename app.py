@@ -67,4 +67,5 @@ def handle_message(event):
         print("Sending reply to LINE...")
         line_bot_api.reply_message(reply_message)
         print("Reply sent successfully!")
-    except Exception as e
+        except Exception as e:
+
