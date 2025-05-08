@@ -37,7 +37,7 @@ def callback():
 
     return "OK", 200
 
-# ✅ メッセージ受信エンドポイント
+# ✅ メッセージ受信ハンドラー
 @handler.add(TextMessage)
 def handle_message(event):
     user_input = event.message.text
@@ -50,10 +50,13 @@ def handle_message(event):
             max_tokens=150,
             temperature=0.7
         )
+        # OpenAIのレスポンスを直接表示（デバッグ用）
+        print(f"OpenAI Response: {response}")
         reply_text = response.choices[0].text.strip()
+
     except Exception as e:
         print(f"OpenAI Error: {e}")
-        reply_text = "レシピの取得に失敗しました。"
+        reply_text = "申し訳ございませんが、レシピの取得に失敗しました。"
 
     # 返信メッセージの作成
     reply_message = ReplyMessageRequest(
@@ -67,5 +70,5 @@ def handle_message(event):
         print(f"LINE Reply Error: {e}")
 
 if __name__ == "__main__":
-    # ✅ Render用に 0.0.0.0 で起動
+    # ✅ Render用の起動設定
     app.run(host="0.0.0.0", port=5000)
