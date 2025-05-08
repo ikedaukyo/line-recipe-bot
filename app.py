@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, abort
 from linebot.v3.webhook import WebhookHandler
-from linebot.v3.messaging import MessagingApi, ReplyMessageRequest, TextMessage, TextMessageContent
+from linebot.v3.messaging import MessagingApi, ReplyMessageRequest, TextMessage
 import openai
 
 app = Flask(__name__)
@@ -63,3 +63,5 @@ def handle_message(event):
 
 if __name__ == "__main__":
     app.run()
+
+   
