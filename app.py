@@ -18,9 +18,15 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET)
 # OpenAIの設定
 openai.api_key = OPENAI_API_KEY
 
-@app.route("/callback", methods=['POST'])
+# ✅ ルートエンドポイント（Renderの確認用）
+@app.route("/", methods=["GET"])
+def home():
+    return "LINE Recipe Bot is running!", 200
+
+# ✅ Webhookエンドポイント
+@app.route("/callback", methods=["POST"])
 def callback():
-    signature = request.headers.get('X-Line-Signature')
+    signature = request.headers.get("X-Line-Signature")
     body = request.get_data(as_text=True)
 
     try:
@@ -29,8 +35,9 @@ def callback():
         print(f"Error in callback: {e}")
         abort(500)
 
-    return 'OK', 200
+    return "OK", 200
 
+# ✅ メッセージ受信エンドポイント
 @handler.add(TextMessage)
 def handle_message(event):
     user_input = event.message.text
@@ -44,7 +51,6 @@ def handle_message(event):
             temperature=0.7
         )
         reply_text = response.choices[0].text.strip()
-
     except Exception as e:
         print(f"OpenAI Error: {e}")
         reply_text = "レシピの取得に失敗しました。"
@@ -55,13 +61,11 @@ def handle_message(event):
         messages=[TextMessage(text=reply_text)]
     )
 
-    # メッセージの送信
     try:
         line_bot_api.reply_message(reply_message)
     except Exception as e:
         print(f"LINE Reply Error: {e}")
 
 if __name__ == "__main__":
+    # ✅ Render用に 0.0.0.0 で起動
     app.run(host="0.0.0.0", port=5000)
-
-   
