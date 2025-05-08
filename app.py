@@ -50,7 +50,6 @@ def handle_message(event):
             max_tokens=150,
             temperature=0.7
         )
-
         reply_text = response.choices[0].text.strip()
         print(f"OpenAI Response: {reply_text}")
 
@@ -67,5 +66,9 @@ def handle_message(event):
         print("Sending reply to LINE...")
         line_bot_api.reply_message(reply_message)
         print("Reply sent successfully!")
-        except Exception as e:
+    except Exception as e:
+        print(f"LINE Reply Error: {e}")
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
 
