@@ -27,6 +27,10 @@ def callback():
     print(f"Signature: {signature}")
     print(f"Body: {body}")
 
+    if not signature:
+        print("Signature is missing")
+        abort(400)
+
     try:
         handler.handle(body, signature)
         print("Webhook handled successfully")
@@ -71,4 +75,3 @@ def handle_message(event):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
-
